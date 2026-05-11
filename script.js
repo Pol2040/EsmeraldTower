@@ -28,7 +28,7 @@ const contactForm = document.getElementById('contact-form');
 if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        alert('¡Gracias por tu interés en Esmerald Tower! Un asesor se pondrá en contacto contigo a la brevedad.');
+        alert('¡Gracias por tu mensaje! Nos pondremos en contacto contigo a la brevedad.');
         contactForm.reset();
     });
 }
