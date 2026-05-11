@@ -188,9 +188,28 @@ nav {
     box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
 }
 
-/* Sections */
+/* Sections / Scenes */
 section {
     padding: 8rem 0;
+    min-height: calc(100vh - 80px); /* Fill screen height */
+    display: none; /* Hidden by default */
+    opacity: 0;
+}
+
+section.active {
+    display: block;
+    animation: fadeInScene 0.8s ease forwards;
+}
+
+@keyframes fadeInScene {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .section-title {

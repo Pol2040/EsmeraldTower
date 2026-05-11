@@ -9,16 +9,39 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// Smooth Scrolling for Nav Links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
+// Scene Navigation
+const navLinks = document.querySelectorAll('.nav-links a, .logo');
+const sections = document.querySelectorAll('section');
+
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            window.scrollTo({
-                top: target.offsetTop - 80,
-                behavior: 'smooth'
+        
+        // Get target ID
+        const targetId = link.getAttribute('href');
+        const targetSection = document.querySelector(targetId === '#' ? '#inicio' : targetId);
+
+        if (targetSection) {
+            // Hide all sections
+            sections.forEach(section => {
+                section.classList.remove('active');
             });
+
+            // Show target section
+            targetSection.classList.add('active');
+
+            // Scroll to top of the new "scene"
+            window.scrollTo({
+                top: 0,
+                behavior: 'instant'
+            });
+
+            // Update header state if needed
+            if (targetId === '#inicio' || targetId === '#') {
+                header.classList.remove('scrolled');
+            } else {
+                header.classList.add('scrolled');
+            }
         }
     });
 });
