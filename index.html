@@ -1,931 +1,102 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dashboard RRSS ObSBA</title>
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
-  <!-- Google Charts -->
-  <script src="https://www.gstatic.com/charts/loader.js"></script>
-
-  <style>
-    :root {
-      --primary: #6366f1;
-      --primary-hover: #4f46e5;
-      --bg-color: #f3f4f6;
-      --card-bg: #ffffff;
-      --text-main: #1f2937;
-      --text-muted: #6b7280;
-      --accent: #4e73df;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* ================= ESTILO GENERAL ================= */
-    body {
-      font-family: 'Outfit', sans-serif;
-      background-color: var(--bg-color);
-      margin: 0;
-      padding: 1rem;
-      color: var(--text-main);
-      line-height: 1.5;
-      min-height: 100vh;
-    }
-
-    @media (min-width: 768px) {
-      body {
-        padding: 2.5rem;
-      }
-    }
-
-    .dashboard-container {
-      max-width: 1400px;
-      margin: auto;
-      background: var(--card-bg);
-      padding: 1.5rem;
-      border-radius: 1.5rem;
-      box-shadow: var(--shadow-lg);
-    }
-
-    @media (min-width: 768px) {
-      .dashboard-container {
-        padding: 2.5rem;
-      }
-    }
-
-    h1 {
-      color: var(--primary);
-      font-weight: 800;
-      font-size: 1.75rem;
-      margin-bottom: 2rem;
-      text-align: center;
-      position: relative;
-      padding-bottom: 1rem;
-    }
-
-    h1::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 4px;
-      background: var(--primary);
-      border-radius: 2px;
-    }
-
-    /* ================= CONTROLES ================= */
-    .controls {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-      padding: 1.5rem;
-      background: #f9fafb;
-      border-radius: 1rem;
-      border: 1px solid #e5e7eb;
-    }
-
-    @media (min-width: 640px) {
-      .controls {
-        grid-template-columns: 1fr 1fr;
-        justify-content: center;
-        align-items: center;
-      }
-    }
-
-    .control-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .controls label {
-      font-weight: 700;
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      text-transform: uppercase;
-      letter-spacing: 0.025em;
-    }
-
-    .controls select {
-      padding: 0.75rem 1rem;
-      border: 2px solid #e5e7eb;
-      border-radius: 0.75rem;
-      background: #fff;
-      font-size: 1rem;
-      font-family: inherit;
-      font-weight: 600;
-      transition: var(--transition);
-      cursor: pointer;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 0.75rem center;
-      background-size: 1.25rem;
-    }
-
-    .controls select:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-      outline: none;
-    }
-
-    /* ================= CARD CONTENEDOR GRÁFICO ================= */
-    .chart-card {
-      background: #fff;
-      border: 1px solid #f3f4f6;
-      border-radius: 1.25rem;
-      padding: 1.5rem;
-      margin-top: 1.5rem;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .card-title {
-      text-align: center;
-      color: var(--primary);
-      font-weight: 700;
-      font-size: 1.25rem;
-      margin-bottom: 1.5rem;
-    }
-
-    #chart_area {
-      width: 100%;
-      min-height: 350px;
-      overflow: hidden;
-    }
-
-    @media (min-width: 768px) {
-      #chart_area {
-        min-height: 520px;
-      }
-    }
-
-    .info {
-      text-align: center;
-      color: var(--danger);
-      margin-top: 1rem;
-      font-weight: 600;
-    }
-
-    /* ================= AUX CARDS ================= */
-    .aux-subtitle {
-      text-align: center;
-      font-weight: 800;
-      color: var(--primary);
-      margin: 2rem 0 1rem;
-      font-size: 1.125rem;
-      background: rgba(99, 102, 241, 0.05);
-      padding: 0.5rem;
-      border-radius: 0.5rem;
-      display: inline-block;
-      left: 50%;
-      position: relative;
-      transform: translateX(-50%);
-    }
-
-    #auxCardsContainer {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      width: 100%;
-      margin-top: 1rem;
-    }
-
-    .aux-card {
-      background: #ffffff;
-      border-radius: 1rem;
-      padding: 1.25rem;
-      border: 1px solid #f3f4f6;
-      box-shadow: var(--shadow-sm);
-      transition: var(--transition);
-      min-width: 180px;
-      flex: 1 1 200px;
-      max-width: 300px;
-    }
-
-    .aux-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .aux-row {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    .aux-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-    }
-
-    .aux-value {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--text-main);
-    }
-
-    /* ================= GRID DE TARJETAS TOP ================= */
-    .card-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.5rem;
-      padding: 1.5rem 0;
-    }
-
-    .card {
-      background: #ffffff;
-      border-radius: 1rem;
-      border: 1px solid #f3f4f6;
-      box-shadow: var(--shadow-md);
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      position: relative;
-      transition: var(--transition);
-      flex: 1 1 280px;
-      max-width: 400px;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .card-top {
-      border-top: 5px solid var(--primary);
-    }
-
-    .card-rank {
-      font-weight: 800;
-      color: var(--primary);
-      font-size: 1rem;
-      background: rgba(99, 102, 241, 0.1);
-      padding: 0.25rem 0.75rem;
-      border-radius: 2rem;
-      align-self: flex-start;
-    }
-
-    .card-main {
-      font-size: 1.75rem;
-      font-weight: 800;
-      color: var(--text-main);
-    }
-
-    .card-stats {
-      font-size: 0.9375rem;
-      color: var(--text-main);
-      line-height: 1.6;
-    }
-
-    .card-stats hr {
-      border: 0;
-      border-top: 1px solid #f3f4f6;
-      margin: 0.75rem 0;
-    }
-
-    .card-link {
-      margin-top: auto;
-      font-weight: 700;
-      color: var(--primary);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: var(--transition);
-    }
-
-    .card-link:hover {
-      color: var(--primary-hover);
-      transform: translateX(3px);
-    }
-
-    /* ================= RESPONSIVE ADJUSTMENTS ================= */
-
-    @media (max-width: 640px) {
-      h1 {
-        font-size: 1.5rem;
-      }
-
-      .card-main {
-        font-size: 1.5rem;
-      }
-
-      .aux-value {
-        font-size: 1.25rem;
-      }
-    }
-
-    /* Fix for Google Charts responsiveness */
-    rect[fill="#ffffff"] {
-      fill: transparent !important;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esmerald Tower | Lujo y Exclusividad en las Alturas</title>
+    <meta name="description" content="Esmerald Tower es el nuevo referente de arquitectura de lujo. Descubre unidades exclusivas con vistas panorámicas y amenidades de clase mundial.">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
 
-  <div class="dashboard-container">
-    <h1>Dashboard RRSS ObSBA</h1>
+    <header id="header">
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">ESMERALD TOWER</a>
+                <ul class="nav-links">
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#amenidades">Amenidades</a></li>
+                    <li><a href="#unidades">Unidades</a></li>
+                    <li><a href="#ubicacion">Ubicación</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-    <div class="controls">
-      <div class="control-group">
-        <label for="socialSelect">Red social</label>
-        <select id="socialSelect"></select>
-      </div>
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="inicio">
+            <div class="hero-bg">
+                <!-- Replace with the actual generated image path -->
+                <img src="hero-tower.png" alt="Esmerald Tower Exterior" id="hero-image">
+            </div>
+            <div class="container">
+                <div class="hero-content">
+                    <span class="hero-subtitle">Vivienda de Ultra-Lujo</span>
+                    <h1>Redefiniendo el <br> Horizonte Urbano</h1>
+                    <p>Una joya arquitectónica diseñada para quienes exigen lo extraordinario. Esmerald Tower combina tecnología sostenible con elegancia atemporal.</p>
+                    <a href="#contacto" class="btn btn-primary">Agendar Visita</a>
+                </div>
+            </div>
+        </section>
 
-      <div class="control-group">
-        <label for="chartSelect">Gráfico</label>
-        <select id="chartSelect"></select>
-      </div>
-    </div>
+        <!-- Amenities Section -->
+        <section id="amenidades">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Experiencia Exclusive</h2>
+                    <div class="underline"></div>
+                </div>
+                
+                <div class="amenities-grid">
+                    <div class="amenity-card">
+                        <i class="fa-solid fa-water-ladder"></i>
+                        <h3>Infinity Pool</h3>
+                        <p>Piscina de borde infinito en el piso 50 con vistas 360 de la ciudad.</p>
+                    </div>
+                    <div class="amenity-card">
+                        <i class="fa-solid fa-dumbbell"></i>
+                        <h3>Sky Gym</h3>
+                        <p>Equipamiento de última generación y entrenadores personales a tu disposición.</p>
+                    </div>
+                    <div class="amenity-card">
+                        <i class="fa-solid fa-spa"></i>
+                        <h3>Wellness Spa</h3>
+                        <p>Un santuario de relajación con tratamientos exclusivos y saunas de cristal.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <div class="chart-card">
-      <div class="card-title" id="cardTitle">Seleccione una red y un gráfico</div>
-      <div id="chart_area">Cargando...</div>
-      <div id="auxSubtitle" class="aux-subtitle"></div>
-      <div id="auxCardsContainer"></div>
-      <div id="chartInfo" class="info"></div>
-    </div>
-  </div>
+        <!-- Contact Section -->
+        <section id="contacto" style="background: var(--glass);">
+            <div class="container" style="max-width: 600px; text-align: center;">
+                <div class="section-title">
+                    <h2>Descubre el Futuro</h2>
+                    <p>Déjanos tus datos para recibir el brochure exclusivo de Esmerald Tower.</p>
+                </div>
+                <form id="contact-form" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <input type="text" placeholder="Nombre Completo" required style="padding: 1rem; background: var(--glass); border: 1px solid var(--glass-border); color: white;">
+                    <input type="email" placeholder="Correo Electrónico" required style="padding: 1rem; background: var(--glass); border: 1px solid var(--glass-border); color: white;">
+                    <button type="submit" class="btn btn-primary">Solicitar Información</button>
+                </form>
+            </div>
+        </section>
+    </main>
 
+    <footer style="padding: 4rem 0; text-align: center; border-top: 1px solid var(--glass-border);">
+        <div class="container">
+            <p style="color: var(--text-muted); font-size: 0.8rem; letter-spacing: 1px;">&copy; 2026 ESMERALD TOWER. TODOS LOS DERECHOS RESERVADOS.</p>
+        </div>
+    </footer>
 
-  <script>
-    /* ========== CONFIG: GIDs y mapeo de gráficos ========== */
-    const SHEET_ID = '17nld9mh3PtcOSPkKU2VxFGIkUD3w8IaZ1VyuR2XhtN8';
-
-    const SHEETS = {
-      "General": { gid: "936287352", label: "HomePage" },
-      "Instagram": { gid: "2147310482", label: "Instagram" },
-      "Facebook": { gid: "708910305", label: "Facebook" },
-      "X": { gid: "1309548050", label: "X" },
-      "TikTok": { gid: "650301486", label: "TikTok" },
-      "YouTube": { gid: "398717676", label: "YouTube" }
-    };
-
-    const CHARTS_BY_SHEET = {
-      "General": {
-        "promedios": {
-          label: "Promedios generales",
-          query: `SELECT A, B, C, D WHERE A IS NOT NULL AND (B IS NOT NULL OR C IS NOT NULL OR D IS NOT NULL) LABEL A "Año"`,
-          chartType: 'ColumnChart'
-        }
-      },
-      "Instagram": {
-        "anual": {
-          label: "Tasa de compromiso total",
-          query: `SELECT A, B, C, D, E, F, G, H WHERE A IS NOT NULL AND (B IS NOT NULL OR C IS NOT NULL OR D IS NOT NULL) LABEL A "Año", E "Media Interacciones", F "Media Likes", G "Media Comentarios", H "Media Visualizaciones"`,
-          chartType: 'ColumnChart',
-          chartColumns: [0, 1, 2, 3],
-          auxColumns: [4, 5, 6, 7]
-        },
-        "bimestral": {
-          label: "Tasa de compromiso por bimestres",
-          query: `SELECT M, N, O, P, Q, R, S WHERE M IS NOT NULL AND (N IS NOT NULL OR O IS NOT NULL OR P IS NOT NULL OR Q IS NOT NULL OR R IS NOT NULL OR S IS NOT NULL) LABEL M "Año"`,
-          chartType: 'ColumnChart'
-        },
-        "tipo_post": {
-          label: "Anual. Por tipo de publicación",
-          query: `SELECT J, K, L WHERE J IS NOT NULL AND (K IS NOT NULL OR L IS NOT NULL) LABEL J "Año"`,
-          chartType: 'ColumnChart'
-        },
-        "Top_Anual": {
-          label: "Top publicaciones anuales",
-          query: `SELECT U, V, W, X, Y, AA WHERE U IS NOT NULL AND (V IS NOT NULL OR W IS NOT NULL OR X IS NOT NULL OR Y IS NOT NULL OR AA IS NOT NULL) LABEL U "Top"`,
-          chartType: 'Card',
-          cardTemplate: 'topAnual'
-        },
-        "Top_Bimestral": {
-          label: "Top publicaciones Bimestrales",
-          query: `SELECT AB, AC, AE, AF, AH, AI, AK WHERE AB IS NOT NULL AND (AC IS NOT NULL OR AE IS NOT NULL OR AF IS NOT NULL OR AH IS NOT NULL OR AI IS NOT NULL OR AK IS NOT NULL) LABEL AB "Bimestre"`,
-          chartType: 'Card',
-          cardTemplate: 'topBimestral'
-        }
-      },
-      "Facebook": {
-        "anual": {
-          label: "Tasa de compromiso total",
-          query: `SELECT A, B, C, D, E, F, G, H WHERE A IS NOT NULL AND (B IS NOT NULL OR C IS NOT NULL OR D IS NOT NULL) LABEL A "Año", B "ObSBA", C "Promedio Mercado", D "Promedio salud", E "Media Interacciones", F "Media Likes", G "Media Comentarios", H "Media Visualizaciones"`,
-          chartType: 'ColumnChart',
-          chartColumns: [0, 1, 2, 3],
-          auxColumns: [4, 5, 6, 7]
-        },
-        "bimestral": {
-          label: "Tasa de compromiso por bimestres.",
-          query: `SELECT M, N, O, P, Q, R, S WHERE M IS NOT NULL AND (N IS NOT NULL OR O IS NOT NULL OR P IS NOT NULL OR Q IS NOT NULL OR R IS NOT NULL OR S IS NOT NULL) LABEL M 'Bimestre'`,
-          chartType: 'ColumnChart'
-        },
-        "tipo_post": {
-          label: "Facebook anual. Por tipo de publicación",
-          query: `SELECT I, J, K, L WHERE I IS NOT NULL AND (J IS NOT NULL OR K IS NOT NULL OR L IS NOT NULL) LABEL I "Año"`,
-          chartType: 'ColumnChart'
-        },
-        "Top_Anual": {
-          label: "Top publicaciones anuales",
-          query: `SELECT T, U, V, W, X, Z WHERE T IS NOT NULL AND (U IS NOT NULL OR V IS NOT NULL OR W IS NOT NULL OR X IS NOT NULL OR Z IS NOT NULL) LABEL T "Top"`,
-          chartType: 'Card',
-          cardTemplate: 'topAnual'
-        },
-        "Top_Bimestral": {
-          label: "Top publicaciones Bimestrales",
-          query: `SELECT AB, AC, AE, AF, AH, AI, AK WHERE AB IS NOT NULL AND (AC IS NOT NULL OR AE IS NOT NULL OR AF IS NOT NULL OR AH IS NOT NULL OR AI IS NOT NULL OR AK IS NOT NULL) LABEL AB "Bimestre"`,
-          chartType: 'Card',
-          cardTemplate: 'topBimestral'
-        }
-      },
-      "X": {
-        "anual": {
-          label: "Tasa de compromiso total",
-          query: `SELECT A, B, C, D, E, F, G, H WHERE A IS NOT NULL AND (B IS NOT NULL OR C IS NOT NULL OR D IS NOT NULL) LABEL A "Año", B "ObSBA", C "Promedio Mercado", D "Promedio salud", E "Media Interacciones", F "Media Likes", G "Media Comentarios", H "Media Visualizaciones"`,
-          chartType: 'ColumnChart',
-          chartColumns: [0, 1, 2, 3],
-          auxColumns: [4, 5, 6, 7]
-        },
-        "bimestral": {
-          label: "Tasa de compromiso por bimestres",
-          query: `SELECT N, O, P, Q, R, S, T WHERE N IS NOT NULL AND (O IS NOT NULL OR P IS NOT NULL OR Q IS NOT NULL OR R IS NOT NULL OR S IS NOT NULL OR T IS NOT NULL) LABEL N 'Bimestre'`,
-          chartType: 'ColumnChart'
-        },
-        "bimestres_tipo_2025": {
-          label: "2025: TC por bimestres y tipo",
-          query: `SELECT V, W, X WHERE V IS NOT NULL AND (W IS NOT NULL OR X IS NOT NULL) LABEL V 'Bimestre'`,
-          chartType: 'ColumnChart'
-        },
-        "tipo_por_anio": {
-          label: "TC por año y tipo",
-          query: `SELECT J, K, L WHERE J IS NOT NULL AND (K IS NOT NULL OR L IS NOT NULL) LABEL J 'Año'`,
-          chartType: 'ColumnChart'
-        },
-        "Top_Anual": {
-          label: "Top publicaciones anuales",
-          query: `SELECT AA, AB, AC, AD, AE, AG WHERE AA IS NOT NULL AND (AB IS NOT NULL OR AC IS NOT NULL OR AD IS NOT NULL OR AE IS NOT NULL OR AG IS NOT NULL) LABEL AA "Top"`,
-          chartType: 'Card',
-          cardTemplate: 'topAnual'
-        },
-        "Top_Bimestral": {
-          label: "Top publicaciones Bimestrales",
-          query: `SELECT AH, AI, AK, AL, AN, AO, AQ WHERE AH IS NOT NULL AND (AI IS NOT NULL OR AK IS NOT NULL OR AL IS NOT NULL OR AN IS NOT NULL OR AO IS NOT NULL OR AQ IS NOT NULL) LABEL AH "Bimestre"`,
-          chartType: 'Card',
-          cardTemplate: 'topBimestral'
-        }
-      },
-      "TikTok": {
-        "anual": {
-          label: "Tasa de compromiso total",
-          query: `SELECT A, B, C, D, E, F, G, H WHERE A IS NOT NULL AND (B IS NOT NULL OR C IS NOT NULL OR D IS NOT NULL) LABEL A "Año",B "ObSBA", C "Promedio Mercado", D "Promedio salud", E "Media Interacciones", F "Media Likes", G "Media Comentarios", H "Media Visualizaciones"`,
-          chartType: 'ColumnChart',
-          chartColumns: [0, 1, 2, 3],
-          auxColumns: [4, 5, 6, 7]
-        },
-        "bimestral": {
-          label: "Tasa de compromiso. Visualizaciones. Bimestral",
-          query: `SELECT O, P, Q, R, S, T, U WHERE O IS NOT NULL AND (P IS NOT NULL OR Q IS NOT NULL OR R IS NOT NULL OR S IS NOT NULL OR T IS NOT NULL OR U IS NOT NULL) LABEL O 'Bimestre'`,
-          chartType: 'ColumnChart'
-        },
-        "bimestres_tipo": {
-          label: "Tasa de compromiso. Por bimestres",
-          query: `SELECT W, X, Y, Z WHERE W IS NOT NULL AND (X IS NOT NULL OR Y IS NOT NULL OR Z IS NOT NULL) LABEL W 'Bimestre'`,
-          chartType: 'ColumnChart'
-        },
-        "tipo_x_anio": {
-          label: "Anual. Por tipo de publicación",
-          query: `SELECT J, K, L, M WHERE J IS NOT NULL AND (K IS NOT NULL OR L IS NOT NULL OR M IS NOT NULL) LABEL J 'Año'`,
-          chartType: 'ColumnChart'
-        },
-        "Top_Anual": {
-          label: "Top publicaciones anuales",
-          query: `SELECT AB, AC, AD, AE, AF, AH WHERE AB IS NOT NULL AND (AC IS NOT NULL OR AD IS NOT NULL OR AE IS NOT NULL OR AF IS NOT NULL OR AH IS NOT NULL) LABEL AB "Top"`,
-          chartType: 'Card',
-          cardTemplate: 'topAnual'
-        },
-        "Top_Bimestral": {
-          label: "Top publicaciones Bimestrales",
-          query: `SELECT AI, AJ, AL, AM, AO, AP, AR WHERE AI IS NOT NULL AND (AJ IS NOT NULL OR AL IS NOT NULL OR AM IS NOT NULL OR AO IS NOT NULL OR AP IS NOT NULL OR AR IS NOT NULL) LABEL AI "Bimestre"`,
-          chartType: 'Card',
-          cardTemplate: 'topBimestral'
-        }
-      },
-      "YouTube": {
-        "anual": {
-          label: "Tasa de compromiso total",
-          query: `SELECT A, B, C, D, E, F, G WHERE A IS NOT NULL AND (B IS NOT NULL OR C IS NOT NULL) LABEL A "Año", B "ObSBA", C "Promedio Mercado", D "Media Interacciones", E "Media Likes", F "Media Comentarios", G "Media Visualizaciones"`,
-          chartType: 'ColumnChart',
-          chartColumns: [0, 1, 2],
-          auxColumns: [3, 4, 5, 6]
-        },
-        "bimestral": {
-          label: "Tasa de compromiso total. Por bimestres",
-          query: `SELECT T, U, V, W, X, Y, Z WHERE T IS NOT NULL AND (U IS NOT NULL OR V IS NOT NULL OR W IS NOT NULL OR X IS NOT NULL OR Y IS NOT NULL OR Z IS NOT NULL) LABEL T 'Bimestre'`,
-          chartType: 'ColumnChart'
-        },
-        "tc_shorts_anual": {
-          label: "Tasa de compromiso en SHORTS",
-          query: `SELECT H, I, J WHERE H IS NOT NULL AND (I IS NOT NULL OR J IS NOT NULL) LABEL H 'Año'`,
-          chartType: 'ColumnChart'
-        },
-        "tc_video_anual": {
-          label: "Tasa de compromiso en VIDEOS",
-          query: `SELECT N, O, P WHERE N IS NOT NULL AND (O IS NOT NULL OR P IS NOT NULL) LABEL N 'Año'`,
-          chartType: 'ColumnChart'
-        },
-        "tc_shorts_bimestral": {
-          label: "Tasa de compromiso en SHORTS. Por bimestres",
-          query: `SELECT AA, AB, AC, AD, AE, AF, AG WHERE AA IS NOT NULL AND (AB IS NOT NULL OR AC IS NOT NULL OR AD IS NOT NULL OR AE IS NOT NULL OR AF IS NOT NULL OR AG IS NOT NULL) LABEL AA 'Bimestre'`,
-          chartType: 'ColumnChart'
-        },
-        "tipo_x_anio": {
-          label: "Tasa de compromiso total por tipo de publicación",
-          query: `SELECT K, L, M WHERE K IS NOT NULL AND (L IS NOT NULL OR M IS NOT NULL) LABEL K 'Año'`,
-          chartType: 'ColumnChart'
-        },
-        "tc_2025_bimestres_tipo": {
-          label: "Tasa de compromiso 2025. Por bimestres",
-          query: `SELECT Q, R, S WHERE Q IS NOT NULL AND (R IS NOT NULL OR S IS NOT NULL) LABEL Q 'Bimestre'`,
-          chartType: 'ColumnChart'
-        },
-        "Top_Anual": {
-          label: "Top publicaciones anuales",
-          query: `SELECT AI, AJ, AK, AL, AM, AO WHERE AI IS NOT NULL AND (AJ IS NOT NULL OR AK IS NOT NULL OR AL IS NOT NULL OR AM IS NOT NULL OR AO IS NOT NULL) LABEL AI "Top"`,
-          chartType: 'Card',
-          cardTemplate: 'topAnual'
-        },
-        "Top_Bimestral": {
-          label: "Top publicaciones Bimestrales",
-          query: `SELECT AP, AQ, AS, AT, AV, AW, AY WHERE AP IS NOT NULL AND (AQ IS NOT NULL OR AS IS NOT NULL OR AT IS NOT NULL OR AV IS NOT NULL OR AW IS NOT NULL OR AY IS NOT NULL) LABEL AP "Bimestre"`,
-          chartType: 'Card',
-          cardTemplate: 'topBimestral'
-        }
-      }
-    };
-
-    const COLORS = ['#6366f1', '#ec4899', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#4b5563'];
-
-    /* ========== Inicializar Google Charts ========== */
-    google.charts.load('current', { packages: ['corechart'] });
-    google.charts.setOnLoadCallback(initUI);
-
-    function initUI() {
-      const socialSelect = document.getElementById('socialSelect');
-      const chartSelect = document.getElementById('chartSelect');
-
-      Object.keys(SHEETS).forEach(k => {
-        const opt = document.createElement('option');
-        opt.value = k;
-        opt.text = SHEETS[k].label || k;
-        socialSelect.appendChild(opt);
-      });
-
-      socialSelect.addEventListener('change', () => populateChartsFor(socialSelect.value));
-      chartSelect.addEventListener('change', () => loadSelectedChart());
-
-      socialSelect.value = "General";
-      populateChartsFor("General");
-
-      // Redraw on resize
-      window.addEventListener('resize', debounce(() => {
-        loadSelectedChart();
-      }, 250));
-    }
-
-    function debounce(func, wait) {
-      let timeout;
-      return function executedFunction(...args) {
-        const later = () => {
-          clearTimeout(timeout);
-          func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-      };
-    }
-
-    function populateChartsFor(socialKey) {
-      const chartSelect = document.getElementById('chartSelect');
-      chartSelect.innerHTML = '';
-
-      const charts = CHARTS_BY_SHEET[socialKey] || {};
-      Object.keys(charts).forEach(key => {
-        const opt = document.createElement('option');
-        opt.value = key;
-        opt.text = charts[key].label;
-        chartSelect.appendChild(opt);
-      });
-
-      const first = chartSelect.options[0]?.value;
-      if (first) chartSelect.value = first;
-      document.getElementById('cardTitle').textContent = `${SHEETS[socialKey].label} — ${charts[first]?.label || ''}`;
-      loadSelectedChart();
-    }
-
-    function loadSelectedChart() {
-      const social = document.getElementById('socialSelect').value;
-      const chartKey = document.getElementById('chartSelect').value;
-      const chartCfg = CHARTS_BY_SHEET[social]?.[chartKey];
-
-      const infoDiv = document.getElementById('chartInfo');
-      const chartArea = document.getElementById('chart_area');
-      const auxContainer = document.getElementById('auxCardsContainer');
-      const subtitle = document.getElementById('auxSubtitle');
-
-      subtitle.textContent = '';
-      if (!chartCfg) {
-        chartArea.innerHTML = 'No hay configuración para este gráfico.';
-        return;
-      }
-
-      document.getElementById('cardTitle').textContent = `${SHEETS[social].label} — ${chartCfg.label}`;
-      infoDiv.textContent = '';
-      auxContainer.innerHTML = '';
-
-      const gid = SHEETS[social].gid;
-      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?gid=${gid}&tqx=out:json&tq=${encodeURIComponent(chartCfg.query)}`;
-
-      chartArea.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:200px">Cargando datos...</div>';
-
-      fetch(url)
-        .then(r => {
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          return r.text();
-        })
-        .then(text => {
-          const m = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/);
-          if (!m) throw new Error('No se pudo parsear la respuesta');
-
-          const json = JSON.parse(m[1]);
-          if (!json.table || !json.table.cols?.length) throw new Error('La hoja no devolvió columnas');
-
-          const originalTable = new google.visualization.DataTable(json.table);
-
-          if (chartCfg.chartType === 'Card') {
-            renderCards(originalTable, chartCfg.cardTemplate || 'topAnual');
-            auxContainer.innerHTML = '';
-            return;
-          }
-
-          let dataTable = originalTable;
-          if (Array.isArray(chartCfg.chartColumns)) {
-            dataTable = buildChartTable(originalTable, chartCfg.chartColumns);
-          }
-
-          if (dataTable.getNumberOfRows() > 0 && dataTable.getColumnType(0) === 'number') {
-            const forced = new google.visualization.DataTable();
-            forced.addColumn('string', dataTable.getColumnLabel(0));
-            for (let c = 1; c < dataTable.getNumberOfColumns(); c++) {
-              forced.addColumn(dataTable.getColumnType(c), dataTable.getColumnLabel(c));
-            }
-            for (let r = 0; r < dataTable.getNumberOfRows(); r++) {
-              const row = [String(dataTable.getValue(r, 0))];
-              for (let c = 1; c < dataTable.getNumberOfColumns(); c++) {
-                row.push(dataTable.getValue(r, c));
-              }
-              forced.addRow(row);
-            }
-            dataTable = forced;
-          }
-
-          const annotated = new google.visualization.DataTable();
-          annotated.addColumn(dataTable.getColumnType(0), dataTable.getColumnLabel(0));
-          for (let c = 1; c < dataTable.getNumberOfColumns(); c++) {
-            const type = dataTable.getColumnType(c);
-            annotated.addColumn(type, dataTable.getColumnLabel(c));
-            if (type === 'number') annotated.addColumn({ type: 'string', role: 'annotation' });
-          }
-
-          for (let r = 0; r < dataTable.getNumberOfRows(); r++) {
-            const row = [dataTable.getValue(r, 0)];
-            for (let c = 1; c < dataTable.getNumberOfColumns(); c++) {
-              const v = dataTable.getValue(r, c);
-              row.push(v);
-              if (dataTable.getColumnType(c) === 'number') {
-                row.push(v != null && !isNaN(v) ? v.toLocaleString('es-ES', { maximumFractionDigits: 2 }) : '');
-              }
-            }
-            annotated.addRow(row);
-          }
-
-          dataTable = annotated;
-          const options = buildOptions(chartCfg.label, dataTable.getNumberOfColumns() - 1);
-
-          let chartObj;
-          switch (chartCfg.chartType) {
-            case 'LineChart': chartObj = new google.visualization.LineChart(chartArea); break;
-            case 'BarChart': chartObj = new google.visualization.BarChart(chartArea); break;
-            default: chartObj = new google.visualization.ColumnChart(chartArea);
-          }
-
-          let seriesCount = 0;
-          for (let c = 0; c < dataTable.getNumberOfColumns(); c++) {
-            if (dataTable.getColumnType(c) === 'number') seriesCount++;
-          }
-
-          options.colors = COLORS.slice(0, seriesCount);
-          chartObj.draw(dataTable, options);
-
-          google.visualization.events.addListener(chartObj, 'select', () => {
-            const selection = chartObj.getSelection();
-            if (!selection.length) return;
-            const row = selection[0].row;
-            updateAuxCardsByRow(row, originalTable, chartCfg);
-          });
-
-          if (Array.isArray(chartCfg.auxColumns)) {
-            updateAuxCardsByRow(0, originalTable, chartCfg);
-          }
-        })
-        .catch(err => {
-          chartArea.innerHTML = `<span style="color:var(--danger);font-weight:700;">Error: ${err.message}</span>`;
-          console.error(err);
-        });
-    }
-
-    function buildOptions(title, seriesCount) {
-      const isMobile = window.innerWidth < 768;
-      return {
-        title: '', // Remove internal title to use our own
-        fontName: 'Outfit',
-        chartArea: {
-          left: isMobile ? 40 : 80,
-          top: 40,
-          right: isMobile ? 10 : 30,
-          bottom: isMobile ? 100 : 80,
-          width: '100%',
-          height: '100%'
-        },
-        legend: {
-          position: isMobile ? 'top' : 'bottom',
-          textStyle: { fontSize: 12, color: '#6b7280' },
-          maxLines: 3
-        },
-        hAxis: {
-          textStyle: { fontSize: 11, color: '#6b7280' },
-          gridlines: { color: 'transparent' },
-          baselineColor: '#e5e7eb'
-        },
-        vAxis: {
-          textStyle: { fontSize: 11, color: '#6b7280' },
-          gridlines: { color: '#f3f4f6' },
-          baselineColor: '#e5e7eb',
-          format: 'short'
-        },
-        animation: { startup: true, duration: 800, easing: 'out' },
-        annotations: {
-          alwaysOutside: true,
-          textStyle: { fontSize: 11, bold: true, color: '#374151' }
-        },
-        backgroundColor: 'transparent',
-        bar: { groupWidth: '75%' }
-      };
-    }
-
-    function buildChartTable(sourceTable, chartColumns) {
-      const dt = new google.visualization.DataTable();
-      chartColumns.forEach((colIdx) => {
-        dt.addColumn(sourceTable.getColumnType(colIdx), sourceTable.getColumnLabel(colIdx));
-      });
-      for (let r = 0; r < sourceTable.getNumberOfRows(); r++) {
-        const row = chartColumns.map(c => sourceTable.getValue(r, c));
-        dt.addRow(row);
-      }
-      return dt;
-    }
-
-    const CARD_TEMPLATES = {
-      topAnual: renderTopAnualCard,
-      topBimestral: renderTopBimestralCard
-    };
-
-    function renderCards(dataTable, template) {
-      const chartArea = document.getElementById('chart_area');
-      const infoDiv = document.getElementById('chartInfo');
-
-      chartArea.innerHTML = '';
-      infoDiv.textContent = '';
-
-      if (!dataTable || dataTable.getNumberOfRows() === 0) {
-        chartArea.innerHTML = '<div style="color:var(--danger)">No hay datos para mostrar.</div>';
-        return;
-      }
-
-      const renderFn = CARD_TEMPLATES[template];
-      if (!renderFn) {
-        chartArea.innerHTML = `<div style="color:var(--danger)">Template "${template}" no definido</div>`;
-        return;
-      }
-
-      let html = `<div class="card-grid">`;
-      for (let r = 0; r < dataTable.getNumberOfRows(); r++) {
-        html += renderFn(dataTable, r);
-      }
-      html += `</div>`;
-      chartArea.innerHTML = html;
-    }
-
-    function renderTopAnualCard(dt, r) {
-      const rank = r + 1;
-      const tc = Number(dt.getValue(r, 1) || 0);
-      const views = dt.getValue(r, 2) ?? '-';
-      const reactions = dt.getValue(r, 3) ?? '-';
-      const comments = dt.getValue(r, 4) ?? '-';
-      let link = dt.getValue(r, 5);
-      if (link && typeof link === 'object' && link.v) link = link.v;
-      const tcText = tc.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-      return `
-    <div class="card card-top">
-      <div class="card-rank">Top ${rank}</div>
-      <div class="card-main">TC ${tcText}</div>
-      <div class="card-stats">
-        <strong>👁️ Visualizaciones:</strong> ${views}<br/>
-        <strong>👍 Reacciones:</strong> ${reactions}<br/>
-        <strong>💬 Comentarios:</strong> ${comments}
-      </div>
-      ${link ? `<a href="${link}" target="_blank" class="card-link"><span>🔗 Ver publicación</span></a>` : `<span style="color:var(--text-muted)">Link no disponible</span>`}
-    </div>
-  `;
-    }
-
-    function renderTopBimestralCard(dt, r) {
-      const bimestre = dt.getValue(r, 0) ?? '';
-      function formatTC(value) {
-        return Number(value || 0).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      }
-      function normalizeLink(v) {
-        if (!v) return null;
-        if (typeof v === 'object' && v.v) return v.v;
-        if (typeof v === 'string' && v.startsWith('http')) return v;
-        return null;
-      }
-
-      const top1 = formatTC(dt.getValue(r, 1));
-      const link1 = normalizeLink(dt.getValue(r, 2));
-      const top2 = formatTC(dt.getValue(r, 3));
-      const link2 = normalizeLink(dt.getValue(r, 4));
-      const top3 = formatTC(dt.getValue(r, 5));
-      const link3 = normalizeLink(dt.getValue(r, 6));
-
-      return `
-    <div class="card card-top">
-      <div class="card-rank">${bimestre}</div>
-      <div class="card-stats">
-        <strong>Top 1:</strong> ${top1}<br/>
-        ${link1 ? `<a class="card-link" href="${link1}" target="_blank">🔗 Ver publicación</a>` : '<span style="color:var(--text-muted)">Link no disponible</span>'}
-        <hr/>
-        <strong>Top 2:</strong> ${top2}<br/>
-        ${link2 ? `<a class="card-link" href="${link2}" target="_blank">🔗 Ver publicación</a>` : '<span style="color:var(--text-muted)">Link no disponible</span>'}
-        <hr/>
-        <strong>Top 3:</strong> ${top3}<br/>
-        ${link3 ? `<a class="card-link" href="${link3}" target="_blank">🔗 Ver publicación</a>` : '<span style="color:var(--text-muted)">Link no disponible</span>'}
-      </div>
-    </div>
-  `;
-    }
-
-    function updateAuxCardsByRow(row, dataTable, chartCfg) {
-      const container = document.getElementById('auxCardsContainer');
-      const subtitle = document.getElementById('auxSubtitle');
-      container.innerHTML = '';
-      if (!chartCfg.auxColumns || !chartCfg.auxColumns.length) return;
-
-      const year = dataTable.getValue(row, 0);
-      subtitle.textContent = `Detalle año: ${year}`;
-
-      chartCfg.auxColumns.forEach(colIndex => {
-        const label = dataTable.getColumnLabel(colIndex);
-        let value = dataTable.getValue(row, colIndex);
-        if (value === null || value === undefined) return;
-        if (!isNaN(value)) value = Number(value).toLocaleString('es-ES', { maximumFractionDigits: 2 });
-
-        const card = document.createElement('div');
-        card.className = 'aux-card';
-        card.innerHTML = `
-      <div class="aux-row">
-        <span class="aux-label">${label}</span>
-        <span class="aux-value">${value}</span>
-      </div>
-    `;
-        container.appendChild(card);
-      });
-    }
-
-  </script>
+    <!-- JS -->
+    <script src="script.js"></script>
 </body>
-
 </html>
