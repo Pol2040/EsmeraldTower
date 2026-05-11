@@ -1,15 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
 
 :root {
-    --primary: #043927;
-    --primary-light: #065F41;
-    --accent: #D4AF37;
-    --accent-light: #F1D16B;
-    --bg-dark: #0A0A0A;
-    --text-light: #F5F5F5;
-    --text-muted: #A0A0A0;
-    --glass: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --primary: #10b981; /* Vibrant Emerald Green */
+    --primary-light: #34d399;
+    --accent: #10b981; /* Align accent with the green theme */
+    --accent-light: #6ee7b7;
+    --bg-dark: #1a1a1a; /* Dark Gray Background */
+    --text-light: #f3f4f6;
+    --text-muted: #9ca3af;
+    --glass: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
     --font-sans: 'Outfit', sans-serif;
     --font-serif: 'Playfair Display', serif;
     --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -32,6 +32,7 @@ body {
 h1, h2, h3 {
     font-family: var(--font-serif);
     font-weight: 700;
+    color: var(--primary);
 }
 
 /* Scrollbar */
@@ -65,7 +66,7 @@ header {
 }
 
 header.scrolled {
-    background: rgba(10, 10, 10, 0.8);
+    background: rgba(26, 26, 26, 0.8);
     backdrop-filter: blur(10px);
     padding: 1rem 0;
     border-bottom: 1px solid var(--glass-border);
