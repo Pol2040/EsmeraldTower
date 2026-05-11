@@ -13,6 +13,7 @@
     --font-sans: 'Outfit', sans-serif;
     --font-serif: 'Playfair Display', serif;
     --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --header-height: 80px;
 }
 
 * {
@@ -60,7 +61,9 @@ header {
     top: 0;
     width: 100%;
     z-index: 1000;
-    padding: 1.5rem 0;
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
     background: transparent;
     transition: var(--transition);
 }
@@ -101,20 +104,36 @@ nav {
     text-transform: uppercase;
     letter-spacing: 1px;
     transition: var(--transition);
+    position: relative;
 }
 
-.nav-links a:hover {
+.nav-links a:hover,
+.nav-links a.active {
     color: var(--accent);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: var(--transition);
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+    width: 100%;
 }
 
 /* Hero Section */
 .hero {
-    height: 100vh;
     display: flex;
     align-items: center;
     position: relative;
     overflow: hidden;
-    padding: 0; /* Reset inherited padding */
 }
 
 .hero-bg {
@@ -191,7 +210,7 @@ nav {
 
 /* Sections / Scenes */
 section {
-    padding: 120px 0 80px; /* Reduced top padding to clear header (approx 80px) + space */
+    padding: calc(var(--header-height) + 40px) 0 80px;
     min-height: 100vh; /* Fill screen height */
     display: none; /* Hidden by default */
     opacity: 0;

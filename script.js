@@ -30,6 +30,14 @@ navLinks.forEach(link => {
             // Show target section
             targetSection.classList.add('active');
 
+            // Update active link
+            navLinks.forEach(l => l.classList.remove('active'));
+            if (link.classList.contains('logo')) {
+                document.querySelector('.nav-links a[href="#inicio"]').classList.add('active');
+            } else {
+                link.classList.add('active');
+            }
+
             // Scroll to top of the new "scene"
             window.scrollTo({
                 top: 0,
