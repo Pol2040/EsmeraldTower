@@ -190,10 +190,14 @@ nav {
 
 /* Sections / Scenes */
 section {
-    padding: 5rem 0 4rem 0; /* Further reduced top padding */
-    min-height: calc(100vh - 80px); /* Fill screen height */
-    display: none; /* Hidden by default */
+    padding: 5rem 0 4rem 0; /* Minimized top padding to align with header */
+    min-height: 100vh;
+    display: none;
     opacity: 0;
+}
+
+#inicio.hero {
+    padding: 0; /* Hero doesn't need section padding as it's flex-centered */
 }
 
 section.active {
@@ -214,7 +218,7 @@ section.active {
 
 .section-title {
     text-align: center;
-    margin-bottom: 3rem; /* Reduced margin */
+    margin-bottom: 3rem; /* Reduced from 5rem */
 }
 
 .section-title h2 {
