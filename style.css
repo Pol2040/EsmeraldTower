@@ -114,6 +114,7 @@ nav {
     align-items: center;
     position: relative;
     overflow: hidden;
+    padding: 0; /* Reset inherited padding */
 }
 
 .hero-bg {
@@ -190,14 +191,10 @@ nav {
 
 /* Sections / Scenes */
 section {
-    padding: 5rem 0 4rem 0; /* Minimized top padding to align with header */
-    min-height: 100vh;
-    display: none;
+    padding: 120px 0 80px; /* Reduced top padding to clear header (approx 80px) + space */
+    min-height: 100vh; /* Fill screen height */
+    display: none; /* Hidden by default */
     opacity: 0;
-}
-
-#inicio.hero {
-    padding: 0; /* Hero doesn't need section padding as it's flex-centered */
 }
 
 section.active {
