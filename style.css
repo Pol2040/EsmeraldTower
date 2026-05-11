@@ -190,7 +190,7 @@ nav {
 
 /* Sections / Scenes */
 section {
-    padding: 8rem 0;
+    padding: 5rem 0 4rem 0; /* Further reduced top padding */
     min-height: calc(100vh - 80px); /* Fill screen height */
     display: none; /* Hidden by default */
     opacity: 0;
@@ -214,7 +214,7 @@ section.active {
 
 .section-title {
     text-align: center;
-    margin-bottom: 5rem;
+    margin-bottom: 3rem; /* Reduced margin */
 }
 
 .section-title h2 {
